@@ -38,7 +38,7 @@ function greet({ name, age }: { name: string; age: number }): number {
 
 // Para tipar la funcion que se le va a pasar por parametro se especifica asi
 // fn: (param: type) => loQueDevuelve
-// --> void indica que no deberia devolver nada la funcion
+// --> void indica que no deberia devolver nada la funcion, a diferencia del never aqui llega hasta el final de la funcion
 const sayHiFromFunction = (fn: (name: string) => void) => {
   return fn("Charly")
 }
@@ -52,3 +52,62 @@ const sum = (a: number, b: number): number => {
 const rest: (a: number, b: number) => number = (a, b) => {
   return a - b
 }
+
+// never --> nunca va a retornar nada
+function throwError(message: string): never {
+  throw new Error(message)
+}
+
+// inferencia de funciones anonimas segun el contexto
+const names = ["carlos", "charly", "ch"]
+
+names.forEach((name) => {
+  console.log(name.concat(" is a cool name"))
+})
+
+// Objetos
+// Para tipar objetos se hace de la siguiente forma
+let person = {
+  name: "carlos",
+  age: 23,
+  hobbies: ["programming", "gaming"],
+}
+
+// person.name = 123213  --> error
+// person.height = 1.8 --> error
+
+// type alias
+type Person = {
+  readonly id?: string // readonly indica que no se puede modificar
+  name: string
+  age: number
+  hobbies: string[]
+  hasAJob?: boolean // ? indica que es opcional
+}
+
+let persona1: Person = {
+  name: "carlos",
+  age: 23,
+  hobbies: ["programming", "gaming"],
+}
+
+// funcion creadora de persona con type alias en parametros
+const createPerson2 = (person: Person): Person => {
+  const { age, hobbies, name } = person
+  return {
+    id: crypto.randomUUID(),
+    name,
+    age,
+    hobbies: hobbies,
+    hasAJob: true,
+  }
+}
+
+const persona2 = createPerson2({
+  name: "carlos",
+  age: 23,
+  hobbies: ["programming"],
+})
+
+persona2.id?.length // --> si id existe entonces accede a length
+// persona2.id = 123213  --> error porque id es readonly
